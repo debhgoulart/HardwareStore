@@ -4,15 +4,17 @@ import com.loja.hardwarestore.dao.ProdutoDAO;
 import com.loja.hardwarestore.model.entidades.Produto;
 import com.loja.hardwarestore.service.ProdutoService;
 import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
-import java.util.List;
 
 public class TelaProdutos extends javax.swing.JFrame {
 
     private JTable tabelaProdutos;
     private JScrollPane scrollPane;
+    private List<Produto> produtosCarrinho = new ArrayList<>(); // Lista para os produtos no carrinho
 
     public TelaProdutos() {
         initComponents();
@@ -70,12 +72,19 @@ public class TelaProdutos extends javax.swing.JFrame {
     }
 
     private void adicionarAoCarrinho(Produto produto) {
+        if (produtosCarrinho == null) {
+            produtosCarrinho = new ArrayList<>();  // Inicializa a lista se estiver null
+        }
+        produtosCarrinho.add(produto);
         String mensagem = "Produto " + produto.getNome() + " foi adicionado ao seu carrinho!";
         JOptionPane.showMessageDialog(this, mensagem, "Carrinho Atualizado", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void visualizarCarrinho() {
-        JOptionPane.showMessageDialog(this, "Exibindo o carrinho...", "Carrinho", JOptionPane.INFORMATION_MESSAGE);
+        TelaCarrinho telaCarrinho = new TelaCarrinho();
+        telaCarrinho.carregarCarrinho(produtosCarrinho);  // Passa a lista de produtos para TelaCarrinho
+        telaCarrinho.setVisible(true);
+        this.dispose(); // Fecha a tela de produtos
     }
 
     private void initComponents() {
@@ -204,7 +213,12 @@ public class TelaProdutos extends javax.swing.JFrame {
             button.setOpaque(true);
             button.addActionListener(e -> {
                 int row = tabelaProdutos.getSelectedRow();
-                produto = new Produto(0, (String) tabelaProdutos.getValueAt(row, 0), (double) tabelaProdutos.getValueAt(row, 1), (int) tabelaProdutos.getValueAt(row, 2));
+                String nome = (String) tabelaProdutos.getValueAt(row, 0);
+                String precoStr = (String) tabelaProdutos.getValueAt(row, 1);
+                precoStr = precoStr.replace("R$ ", "").replace(",", ".");
+                double preco = Double.parseDouble(precoStr);
+                int quantidade = (int) tabelaProdutos.getValueAt(row, 2);
+                produto = new Produto(0, nome, preco, quantidade);
                 adicionarAoCarrinho(produto);
             });
         }
