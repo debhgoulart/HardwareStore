@@ -1,12 +1,12 @@
-1;CPU Intel Core i7-13700K 16 Cores, 3.4GHz;399.99;25
+1;CPU Intel Core i7-13700K 16 Cores 3.4GHz;399.99;25
 2;GPU NVIDIA RTX 4070 12GB GDDR6;599.99;15
 3;Placa Mãe ASUS ROG STRIX Z790-E ATX DDR5;349.99;10
-4;RAM Corsair Vengeance DDR5 32GB (2x16GB), 6000MHz;199.99;30
+4;RAM Corsair Vengeance DDR5 32GB (2x16GB) 6000MHz;199.99;30
 5;Fonte Corsair RM850x 850W 80+ Gold;129.99;20
 6;Armazenamento Samsung 980 Pro SSD 1TB NVMe PCIe 4.0;119.99;50
 7;Capa ZXT H710 Mid Tower Tempered Glass;169.99;15
 8;Cooler Noctua NH-D15 Dual Tower Air Cooler;99.99;25
-9;Monitor Dell UltraSharp U2723QE 27", 4K UHD;599.99;12
+9;Monitor Dell UltraSharp U2723QE 27" 4K UHD;599.99;12
 10;Teclado Logitech MX Keys Wireless Backlit;99.99;40
 11;Mouse Razer DeathAdder V2 Optical Wired;49.99;35
 12;Headset HyperX Cloud II 7.1 Surround Wired;89.99;25
@@ -14,7 +14,7 @@
 14;Microfone Creative Pebble V3 2.0 USB-C;39.99;50
 15;Wi-Fi Card TP-Link Archer TX3000E Wi-Fi 6 Bluetooth 5.0;49.99;25
 16;Ventoinha Cooler Master SickleFlow 120mm RGB;14.99;100
-17;Pasta Térmica Arctic MX-4, 4g Non-Conductive;8.99;200
+17;Pasta Térmica Arctic MX-4 4g Non-Conductive;8.99;200
 18;UPS APC Back-UPS Pro 1500VA LCD Display;199.99;10
 19;Placa de Som Creative Sound Blaster AE-7 PCIe;229.99;8
 20;Unidade Óptica LG WH16NS40 Blu-Ray/DVD/CD Internal;89.99;15
@@ -22,4 +22,3 @@
 22;Estação de ancoragem Anker PowerExpand Elite 13-in-1 Thunderbolt;249.99;12
 23;SSD Externo SanDisk Extreme Portable SSD 2TB USB-C;249.99;18
 24;Cabos AmazonBasics HDMI Cable 6ft 4K;9.99;100
-25;Limitador de Sobretensão Belkin 12-Outlet Power Strip 4,000 Joules;34.99;25

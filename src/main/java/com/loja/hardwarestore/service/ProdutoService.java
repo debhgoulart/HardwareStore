@@ -12,8 +12,13 @@ public class ProdutoService {
         this.produtoDAO = produtoDAO;
     }
 
-    // Método para obter todos os produtos (agora do arquivo de texto)
+    // Método para obter todos os produtos
     public List<Produto> obterTodosProdutos() {
         return produtoDAO.obterTodosProdutos();
+    }
+
+    // Método para remover produto
+    public boolean removerProduto(int idProduto) {
+        return produtoDAO.removerProduto(idProduto);
     }
 }
