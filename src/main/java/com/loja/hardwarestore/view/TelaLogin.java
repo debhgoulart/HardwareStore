@@ -67,14 +67,23 @@ public class TelaLogin extends JFrame {
         String nome = campoNome.getText();
         String senha = new String(campoSenha.getPassword());
 
-        UsuarioService usuarioService = new UsuarioService();
-        if (usuarioService.autenticar(nome, senha)) {
-            JOptionPane.showMessageDialog(this, "Login bem-sucedido!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            new TelaProdutos().setVisible(true); // Redireciona para a tela de produtos após login
-            dispose(); // Fecha a tela de login
+        // Verifica se o usuário é "adm"
+        if (nome.equals("adm") && senha.equals("adm")) {
+            // Redireciona para a tela de produtos com permissões administrativas
+            JOptionPane.showMessageDialog(this, "Login como Administrador!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            new TelaProdutosAdm().setVisible(true); // Tela de produtos com opções para adicionar/remover
         } else {
-            JOptionPane.showMessageDialog(this, "Nome de usuário ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            // Verifica se o usuário é válido e tem a senha correta
+            UsuarioService usuarioService = new UsuarioService();
+            if (usuarioService.autenticar(nome, senha)) {
+                JOptionPane.showMessageDialog(this, "Login bem-sucedido!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                new TelaProdutos().setVisible(true); // Redireciona para a tela de produtos
+            } else {
+                JOptionPane.showMessageDialog(this, "Nome de usuário ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         }
+
+        dispose(); // Fecha a tela de login
     }
 
     public static void main(String[] args) {
