@@ -58,6 +58,30 @@ public class ProdutoDAO {
 
         return false;
     }
+    
+    // Método para carregar produtos do arquivo
+    public List<Produto> carregarProdutosDoArquivo() {
+        List<Produto> produtos = new ArrayList<>();
+        String caminhoArquivo = "src/main/resources/produtos.txt"; // Caminho do arquivo
+
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] dados = linha.split(";"); // Split por ';' para separar os campos
+                if (dados.length == 4) {
+                    int id = Integer.parseInt(dados[0]);
+                    String nome = dados[1];
+                    double preco = Double.parseDouble(dados[2]);
+                    int quantidade = Integer.parseInt(dados[3]);
+                    produtos.add(new Produto(id, nome, preco, quantidade));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Lida com possíveis erros ao ler o arquivo
+        }
+
+        return produtos;
+    }
 
     // Método auxiliar para formatar produto para salvar no arquivo
     private String formatarProduto(Produto produto) {
