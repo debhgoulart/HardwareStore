@@ -1,1 +1,2 @@
-adm;12.0;12
+Placa de Som Creative Sound Blaster AE-7 PCIe;229.99;8
+RAM Corsair Vengeance DDR5 32GB (2x16GB) 6000MHz;199.99;30

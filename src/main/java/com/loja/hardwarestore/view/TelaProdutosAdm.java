@@ -66,15 +66,12 @@ public class TelaProdutosAdm extends javax.swing.JFrame {
     }
 
     private void adicionarProduto() {
-        // Exemplo de lógica para adicionar produto, você pode personalizar conforme necessário
         JOptionPane.showMessageDialog(this, "Tela para adicionar um novo produto!", "Adicionar Produto", JOptionPane.INFORMATION_MESSAGE);
-        // Lógica para adicionar produto
     }
 
     private void removerProduto() {
         int linhaSelecionada = tabelaProdutos.getSelectedRow();
         if (linhaSelecionada >= 0) {
-            // Lógica para remover o produto selecionado
             DefaultTableModel modelo = (DefaultTableModel) tabelaProdutos.getModel();
             modelo.removeRow(linhaSelecionada);
             JOptionPane.showMessageDialog(this, "Produto removido com sucesso!", "Produto Removido", JOptionPane.INFORMATION_MESSAGE);
@@ -84,10 +81,8 @@ public class TelaProdutosAdm extends javax.swing.JFrame {
     }
 
     private void voltar() {
-        // Cria e exibe a tela de login
         TelaLogin telaLogin = new TelaLogin();
         telaLogin.setVisible(true);
-        // Fecha a tela de produtos atual
         this.dispose();
     }
 
@@ -119,7 +114,6 @@ public class TelaProdutosAdm extends javax.swing.JFrame {
         painelTopo.add(btnVoltar);
         painelTopo.add(Box.createVerticalStrut(10));
 
-        // Adicionando os novos botões para adicionar e remover produto
         JPanel painelBotoes = new JPanel();
         painelBotoes.setLayout(new FlowLayout());
         painelBotoes.add(btnAdicionarProduto);
