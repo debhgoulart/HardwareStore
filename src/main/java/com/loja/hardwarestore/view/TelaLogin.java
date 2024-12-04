@@ -9,7 +9,7 @@ public class TelaLogin extends JFrame {
 
     private JTextField campoNome;
     private JPasswordField campoSenha;
-    private JButton btnLogin, btnCadastro;
+    private JButton btnLogin, btnCadastro, btnSobre;
 
     public TelaLogin() {
         initComponents();
@@ -35,7 +35,6 @@ public class TelaLogin extends JFrame {
         painelConteudo.add(campoNome);
         painelConteudo.add(Box.createVerticalStrut(10));
 
-        //senha
         JLabel labelSenha = new JLabel("Senha");
         campoSenha = new JPasswordField(20);
         painelConteudo.add(labelSenha);
@@ -45,7 +44,7 @@ public class TelaLogin extends JFrame {
         btnLogin = new JButton("Login");
         btnLogin.addActionListener(e -> autenticarUsuario());
         painelConteudo.add(btnLogin);
-        
+
         painelConteudo.add(Box.createVerticalStrut(10));
 
         btnCadastro = new JButton("Cadastrar");
@@ -55,7 +54,15 @@ public class TelaLogin extends JFrame {
         });
         painelConteudo.add(btnCadastro);
 
-        setSize(400, 300);
+        painelConteudo.add(Box.createVerticalStrut(10));
+
+        btnSobre = new JButton("Sobre");
+        btnSobre.addActionListener(e -> {
+            new TelaSobre().setVisible(true);
+        });
+        painelConteudo.add(btnSobre);
+
+        setSize(400, 350);
         setLocationRelativeTo(null);
         add(painelConteudo);
     }
@@ -64,7 +71,6 @@ public class TelaLogin extends JFrame {
         String nome = campoNome.getText();
         String senha = new String(campoSenha.getPassword());
 
-        //é adm?
         if (nome.equals("adm") && senha.equals("adm")) {
             JOptionPane.showMessageDialog(this, "Login como Administrador!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             new TelaProdutosAdm().setVisible(true);

@@ -86,8 +86,8 @@ public class TelaRemoverProduto extends javax.swing.JFrame {
     }
 
     private void voltar() {
-        TelaProdutos telaProdutos = new TelaProdutos();
-        telaProdutos.setVisible(true);
+        TelaProdutosAdm telaProdutosAdm = new TelaProdutosAdm();
+        telaProdutosAdm.setVisible(true);
         this.dispose();
     }
 
