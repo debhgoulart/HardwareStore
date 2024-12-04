@@ -9,7 +9,45 @@ public class ProdutoDAO {
 
     private static final String CAMINHO_ARQUIVO = "src/main/resources/produtos.txt";
 
-    // Método para obter todos os produtos
+    public List<Produto> carregarProdutosCarrinho() {
+        List<Produto> produtosCarrinho = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/carrinho.txt"))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                try {
+                    Produto produto = processarLinha(linha);
+                    produtosCarrinho.add(produto);
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Erro ao processar linha do carrinho: " + linha);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo do carrinho: " + e.getMessage());
+        }
+
+        return produtosCarrinho;
+    }
+
+    public void adicionarProdutoAoCarrinho(String nomeProduto, double precoProduto, int quantidadeProduto) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/carrinho.txt", true))) {
+            writer.write(nomeProduto + ";" + precoProduto + ";" + quantidadeProduto);
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Erro ao adicionar produto no carrinho: " + e.getMessage());
+        }
+    }
+
+    public boolean adicionarProduto(Produto produto) {
+        try (FileWriter writer = new FileWriter(CAMINHO_ARQUIVO, true)) {
+            writer.write(produto.getNome() + ";" + produto.getPreco() + ";" + produto.getQuantidade() + "\n");
+            return true;
+        } catch (IOException e) {
+            System.err.println("Erro ao adicionar produto: " + e.getMessage());
+            return false;
+        }
+    }
+
     public List<Produto> obterTodosProdutos() {
         List<Produto> produtos = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_ARQUIVO))) {
@@ -29,21 +67,48 @@ public class ProdutoDAO {
         return produtos;
     }
 
-    // Método para remover um produto
-    public boolean removerProduto(int idProduto) {
+    public double calcularTotalCarrinho() {
+        double total = 0;
+        List<Produto> produtosCarrinho = carregarProdutosCarrinho(); 
+
+        for (Produto produto : produtosCarrinho) {
+            total += produto.getPreco();
+        }
+
+        return total;
+    }
+
+    public List<Produto> obterProdutosDoCarrinho() {
+        List<Produto> produtos = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/carrinho.txt"))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] partes = linha.split(";");
+                if (partes.length == 3) {
+                    String nome = partes[0];
+                    double preco = Double.parseDouble(partes[1]);
+                    int quantidade = Integer.parseInt(partes[2]);
+                    produtos.add(new Produto(nome, preco, quantidade));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+        }
+        return produtos;
+    }
+
+    public boolean removerProduto(String nomeProduto) {
         List<Produto> produtos = obterTodosProdutos();
         boolean produtoRemovido = false;
 
-        // Remover o produto com o ID fornecido
         for (Produto produto : produtos) {
-            if (produto.getId() == idProduto) {
+            if (produto.getNome().equals(nomeProduto)) {
                 produtos.remove(produto);
                 produtoRemovido = true;
                 break;
             }
         }
 
-        // Se algum produto foi removido, regravar o arquivo
         if (produtoRemovido) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
                 for (Produto produto : produtos) {
@@ -58,53 +123,68 @@ public class ProdutoDAO {
 
         return false;
     }
-    
-    // Método para carregar produtos do arquivo
+
     public List<Produto> carregarProdutosDoArquivo() {
         List<Produto> produtos = new ArrayList<>();
-        String caminhoArquivo = "src/main/resources/produtos.txt"; // Caminho do arquivo
+        String caminhoArquivo = "src/main/resources/produtos.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                String[] dados = linha.split(";"); // Split por ';' para separar os campos
-                if (dados.length == 4) {
-                    int id = Integer.parseInt(dados[0]);
-                    String nome = dados[1];
-                    double preco = Double.parseDouble(dados[2]);
-                    int quantidade = Integer.parseInt(dados[3]);
-                    produtos.add(new Produto(id, nome, preco, quantidade));
+                String[] dados = linha.split(";");
+                if (dados.length == 3) {
+                    String nome = dados[0];
+                    double preco = Double.parseDouble(dados[1]);
+                    int quantidade = Integer.parseInt(dados[2]);
+                    produtos.add(new Produto(nome, preco, quantidade));
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Lida com possíveis erros ao ler o arquivo
+            e.printStackTrace();
         }
 
         return produtos;
     }
 
-    // Método auxiliar para formatar produto para salvar no arquivo
     private String formatarProduto(Produto produto) {
-        return produto.getId() + ";" + produto.getNome() + ";" + produto.getPreco() + ";" + produto.getQuantidade();
+        return produto.getNome() + ";" + produto.getNome() + ";" + produto.getPreco() + ";" + produto.getQuantidade();
     }
 
-    // Método para processar a linha do arquivo
     public Produto processarLinha(String linha) {
         try {
             String[] partes = linha.split(";");
 
-            if (partes.length != 4) {
+            if (partes.length != 3) {
                 throw new IllegalArgumentException("Formato da linha inválido: " + linha);
             }
 
-            int id = Integer.parseInt(partes[0].trim());
-            String nome = partes[1].trim();
-            double preco = Double.parseDouble(partes[2].trim());
-            int quantidade = Integer.parseInt(partes[3].trim());
+            String nome = partes[0].trim();
+            double preco = Double.parseDouble(partes[1].trim());
+            int quantidade = Integer.parseInt(partes[2].trim());
 
-            return new Produto(id, nome, preco, quantidade);
+            return new Produto(nome, preco, quantidade);
         } catch (Exception e) {
             throw new IllegalArgumentException("Formato da linha inválido: " + linha, e);
         }
     }
+
+    public boolean removerProdutoDoCarrinho(String nomeProduto) {
+        List<Produto> produtosCarrinho = carregarProdutosCarrinho();
+        boolean produtoRemovido = produtosCarrinho.removeIf(produto -> produto.getNome().equals(nomeProduto));
+
+        if (produtoRemovido) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/carrinho.txt"))) {
+                for (Produto produto : produtosCarrinho) {
+                    writer.write(formatarProduto(produto));
+                    writer.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                System.err.println("Erro ao atualizar o carrinho: " + e.getMessage());
+            }
+        }
+
+        return false;
+    }
+
 }

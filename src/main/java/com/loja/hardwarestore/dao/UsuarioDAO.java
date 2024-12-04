@@ -27,7 +27,7 @@ public class UsuarioDAO {
     // Salva o usuário no arquivo
     public void salvarUsuario(Usuario usuario) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_USUARIOS, true))) {
-            writer.write(usuario.getNome() + ";" + usuario.getSenha() + "\n"); // Grava nome e senha
+            writer.write(usuario.getNome() + ";" + usuario.getSenha() + "\n"); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class UsuarioDAO {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if (dados.length == 2) { // Verifica que está lendo apenas nome e senha
+                if (dados.length == 2) { 
                     usuarios.add(new Usuario(dados[0], dados[1]));
                 }
             }

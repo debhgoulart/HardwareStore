@@ -2,6 +2,7 @@ package com.loja.hardwarestore.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.UUID;
 
 public class TelaPagamentoPix extends javax.swing.JFrame {
 
@@ -24,33 +25,32 @@ public class TelaPagamentoPix extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Pagamento com Pix");
 
-        // Configuração do painel principal
         painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setBackground(new Color(0xE0F2F1));
+        painelPrincipal.setBackground(new Color(0x004D40));
 
-        // Configuração do título/mensagem
         lblMensagem.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblMensagem.setForeground(new Color(0x004D40));
+        lblMensagem.setForeground(Color.WHITE);
         lblMensagem.setHorizontalAlignment(SwingConstants.CENTER);
-        lblMensagem.setText("Aqui está seu QR Code:");
+        lblMensagem.setText("Copie a chave PIX:");
         painelPrincipal.add(lblMensagem, BorderLayout.NORTH);
 
-        // Configuração do QR Code
         lblQRCode.setHorizontalAlignment(SwingConstants.CENTER);
-        lblQRCode.setText("[QR CODE]");
+        lblQRCode.setText(generatePixCode());
         lblQRCode.setFont(new Font("Segoe UI", Font.ITALIC, 16));
         lblQRCode.setForeground(new Color(0x004D40));
         lblQRCode.setBorder(BorderFactory.createLineBorder(new Color(0x004D40), 2));
         lblQRCode.setOpaque(true);
         lblQRCode.setBackground(Color.WHITE);
-        lblQRCode.setPreferredSize(new Dimension(200, 200));
+
+        lblQRCode.setPreferredSize(new Dimension(600, 200));
+        lblQRCode.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
         JPanel painelQRCode = new JPanel();
-        painelQRCode.setBackground(new Color(0xB2DFDB));
-        painelQRCode.add(lblQRCode);
+        painelQRCode.setBackground(new Color(0xA8D7B7));
+        painelQRCode.setLayout(new BorderLayout());
+        painelQRCode.add(lblQRCode, BorderLayout.CENTER);
         painelPrincipal.add(painelQRCode, BorderLayout.CENTER);
 
-        // Configuração do botão
         btnConfirmar.setText("Confirmar");
         btnConfirmar.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnConfirmar.setBackground(new Color(0x4CAF50));
@@ -62,21 +62,31 @@ public class TelaPagamentoPix extends javax.swing.JFrame {
         btnConfirmar.addActionListener(evt -> btnConfirmarActionPerformed(evt));
 
         JPanel painelBotao = new JPanel();
-        painelBotao.setBackground(new Color(0xE0F2F1));
+        painelBotao.setBackground(new Color(0x004D40));
         painelBotao.add(btnConfirmar);
         painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
 
-        // Adicionar painel principal ao frame
         getContentPane().add(painelPrincipal);
 
-        // Configuração do JFrame
-        setPreferredSize(new Dimension(500, 500));
+        setPreferredSize(new Dimension(800, 700));
         pack();
         setLocationRelativeTo(null);
     }
 
+    private String generatePixCode() {
+        StringBuilder pixCode = new StringBuilder();
+        
+        while (pixCode.length() < 44) {
+            String uuidPart = UUID.randomUUID().toString().replace("-", "");
+            pixCode.append(uuidPart);
+        }
+        
+        return pixCode.substring(0, 44);
+    }
+
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Pagamento confirmado via Pix!", "Confirmação", JOptionPane.INFORMATION_MESSAGE);
+        TelaCompraRealizada telaCompra = new TelaCompraRealizada();
+        telaCompra.setVisible(true);
         this.dispose();
     }
 

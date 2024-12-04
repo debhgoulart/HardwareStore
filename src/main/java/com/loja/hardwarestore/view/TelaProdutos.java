@@ -29,7 +29,6 @@ public class TelaProdutos extends javax.swing.JFrame {
         }
 
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("ID");
         modelo.addColumn("Nome");
         modelo.addColumn("Preço");
         modelo.addColumn("Quantidade");
@@ -58,10 +57,9 @@ public class TelaProdutos extends javax.swing.JFrame {
 
         for (Produto produto : produtos) {
             Object[] linha = new Object[4];
-            linha[0] = produto.getId();
-            linha[1] = produto.getNome();
-            linha[2] = "R$ " + String.format("%.2f", produto.getPreco());
-            linha[3] = produto.getQuantidade();
+            linha[0] = produto.getNome();
+            linha[1] = "R$ " + String.format("%.2f", produto.getPreco());
+            linha[2] = produto.getQuantidade();
             modelo.addRow(linha);
         }
 
@@ -72,42 +70,42 @@ public class TelaProdutos extends javax.swing.JFrame {
     private void adicionarAoCarrinho() {
     int selectedRow = tabelaProdutos.getSelectedRow();
     if (selectedRow != -1) {
-        int idProduto = (int) tabelaProdutos.getValueAt(selectedRow, 0);
-        String nomeProduto = (String) tabelaProdutos.getValueAt(selectedRow, 1);
-        String precoProdutoStr = (String) tabelaProdutos.getValueAt(selectedRow, 2);  // Preço como String
-        int quantidadeProduto = (int) tabelaProdutos.getValueAt(selectedRow, 3);
+        String nomeProduto = (String) tabelaProdutos.getValueAt(selectedRow, 0);
+        String precoProdutoStr = (String) tabelaProdutos.getValueAt(selectedRow, 1);
+        int quantidadeProduto = (int) tabelaProdutos.getValueAt(selectedRow, 2);
 
-        // Remover o "R$" e vírgula, depois converter para Double
         precoProdutoStr = precoProdutoStr.replace("R$ ", "").replace(",", ".");
-        double precoProduto = Double.parseDouble(precoProdutoStr);  // Convertendo para Double
+        double precoProduto = Double.parseDouble(precoProdutoStr);
 
-        // Adicionar no arquivo carrinho.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/carrinho.txt", true))) {
-            writer.write(idProduto + ";" + nomeProduto + ";" + precoProduto + ";" + quantidadeProduto);
-            writer.newLine();
-            JOptionPane.showMessageDialog(this, "Produto adicionado ao carrinho (arquivo)!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao adicionar produto no carrinho (arquivo).", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+        ProdutoService produtoService = new ProdutoService(new ProdutoDAO());
+        produtoService.adicionarProdutoAoCarrinho(nomeProduto, precoProduto, quantidadeProduto);
+
+        JOptionPane.showMessageDialog(this, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     } else {
         JOptionPane.showMessageDialog(this, "Selecione um produto para adicionar ao carrinho.", "Aviso", JOptionPane.WARNING_MESSAGE);
     }
 }
 
+    private void visualizarCarrinho() {
+        TelaCarrinho telaCarrinho = new TelaCarrinho();
+        telaCarrinho.setVisible(true);
+        this.dispose();
+    }
 
     private void voltar() {
-        TelaProdutos telaProdutos = new TelaProdutos();
-        telaProdutos.setVisible(true);
+        TelaLogin telaLogin = new TelaLogin();
+        telaLogin.setVisible(true);
         this.dispose();
     }
 
     private void initComponents() {
         getContentPane().setLayout(new BorderLayout());
 
-        JLabel jLabel1 = new JLabel("Adicionar ao Carrinho");
+        JLabel jLabel1 = new JLabel("Hardware Store");
         JLabel jLabel2 = new JLabel("Produtos:");
         JButton btnVoltar = new JButton("Voltar");
         JButton btnAdicionar = new JButton("Adicionar ao Carrinho");
+        JButton btnVisualizarCarrinho = new JButton("Visualizar Carrinho");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Adicionar ao Carrinho");
@@ -126,6 +124,8 @@ public class TelaProdutos extends javax.swing.JFrame {
         painelTopo.add(btnVoltar);
         painelTopo.add(Box.createVerticalStrut(10));
         painelTopo.add(btnAdicionar);
+        painelTopo.add(Box.createVerticalStrut(10));
+        painelTopo.add(btnVisualizarCarrinho);
 
         btnVoltar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnVoltar.setBackground(Color.WHITE);
@@ -140,6 +140,13 @@ public class TelaProdutos extends javax.swing.JFrame {
         btnAdicionar.setBorderPainted(false);
         btnAdicionar.setFocusPainted(false);
         btnAdicionar.addActionListener(e -> adicionarAoCarrinho());
+
+        btnVisualizarCarrinho.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnVisualizarCarrinho.setBackground(Color.WHITE);
+        btnVisualizarCarrinho.setForeground(new Color(0x004D40));
+        btnVisualizarCarrinho.setBorderPainted(false);
+        btnVisualizarCarrinho.setFocusPainted(false);
+        btnVisualizarCarrinho.addActionListener(e -> visualizarCarrinho());
 
         getContentPane().add(painelTopo, BorderLayout.NORTH);
 

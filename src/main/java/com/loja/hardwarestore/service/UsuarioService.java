@@ -12,23 +12,22 @@ public class UsuarioService {
         this.usuarioDAO = new UsuarioDAO();
     }
 
-    // Método para cadastrar o usuário
+
     public boolean cadastrar(UsuarioDTO usuarioDTO) {
         Usuario usuarioExistente = usuarioDAO.buscarUsuarioPorNome(usuarioDTO.getNome());
         if (usuarioExistente != null) {
-            return false; // Usuário já existe
+            return false; 
         }
 
         Usuario novoUsuario = new Usuario(usuarioDTO.getNome(), usuarioDTO.getSenha());
-        usuarioDAO.salvarUsuario(novoUsuario); // Salva o novo usuário
+        usuarioDAO.salvarUsuario(novoUsuario); 
         return true;
     }
 
-    // Método para autenticar o usuário
+
     public boolean autenticar(String nome, String senha) {
         Usuario usuario = usuarioDAO.buscarUsuarioPorNome(nome);
 
-        // Verifica se o usuário existe e a senha está correta
         if (usuario != null && usuario.getSenha().equals(senha)) {
             return true;
         }

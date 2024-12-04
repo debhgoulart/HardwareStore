@@ -11,14 +11,32 @@ public class ProdutoService {
     public ProdutoService(ProdutoDAO produtoDAO) {
         this.produtoDAO = produtoDAO;
     }
-
-    // Método para obter todos os produtos
     public List<Produto> obterTodosProdutos() {
         return produtoDAO.obterTodosProdutos();
     }
 
-    // Método para remover produto
-    public boolean removerProduto(int idProduto) {
-        return produtoDAO.removerProduto(idProduto);
+    public double calcularTotalCarrinho() {
+        return produtoDAO.calcularTotalCarrinho();
     }
+
+    public void adicionarProdutoAoCarrinho(String nomeProduto, double precoProduto, int quantidadeProduto) {
+        produtoDAO.adicionarProdutoAoCarrinho(nomeProduto, precoProduto, quantidadeProduto);
+    }
+
+    public boolean adicionarProduto(Produto produto) {
+        return produtoDAO.adicionarProduto(produto);
+    }
+
+    public boolean removerProduto(String nomeProduto) {
+        return produtoDAO.removerProduto(nomeProduto);
+    }
+
+    public List<Produto> obterProdutosDoCarrinho() {
+        return produtoDAO.obterProdutosDoCarrinho();
+    }
+
+    public boolean removerProdutoDoCarrinho(String nomeProduto) {
+        return produtoDAO.removerProdutoDoCarrinho(nomeProduto);
+    }
+
 }

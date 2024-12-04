@@ -1,26 +1,14 @@
 package com.loja.hardwarestore.model.entidades;
 
 public class Produto {
-    private int id;
     private String nome;
     private double preco;
     private int quantidade;
 
-    // Construtor
-    public Produto(int id, String nome, double preco, int quantidade) {
-        this.id = id;
+    public Produto(String nome, double preco, int quantidade) {
         this.nome = nome;
         this.preco = preco;
         this.quantidade = quantidade;
-    }
-
-    // Getters e Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {

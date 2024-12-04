@@ -1,65 +1,126 @@
 package com.loja.hardwarestore.view;
 
 import com.loja.hardwarestore.model.entidades.Produto;
+import com.loja.hardwarestore.service.ProdutoService;
+import com.loja.hardwarestore.dao.ProdutoDAO;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
 
-public class TelaAdicionarProduto extends JFrame {
+public class TelaAdicionarProduto extends javax.swing.JFrame {
 
-    private JTextField campoNome, campoPreco, campoQuantidade;
-    private JButton btnAdicionar, btnCancelar;
+    private ProdutoService produtoService;
 
     public TelaAdicionarProduto() {
-        initComponents();
+        ProdutoDAO produtoDAO = new ProdutoDAO();
+        produtoService = new ProdutoService(produtoDAO);
+        initComponents(); 
     }
 
     private void initComponents() {
+        jPanel1 = new javax.swing.JPanel();
+        labelTitulo = new javax.swing.JLabel();
+        labelNome = new javax.swing.JLabel();
+        campoNome = new javax.swing.JTextField();
+        labelPreco = new javax.swing.JLabel();
+        campoPreco = new javax.swing.JTextField();
+        labelQuantidade = new javax.swing.JLabel();
+        campoQuantidade = new javax.swing.JTextField();
+        btnAdicionar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Adicionar Produto");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
 
-        JPanel painelConteudo = new JPanel();
-        painelConteudo.setLayout(new BoxLayout(painelConteudo, BoxLayout.Y_AXIS));
-        painelConteudo.setAlignmentX(CENTER_ALIGNMENT);
+        labelTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        labelTitulo.setText("Adicionar Novo Produto");
+        labelTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        JLabel labelTitulo = new JLabel("Adicionar Novo Produto", SwingConstants.CENTER);
-        painelConteudo.add(labelTitulo);
-        painelConteudo.add(Box.createVerticalStrut(20));
+        labelNome.setText("Nome do Produto");
 
-        JLabel labelNome = new JLabel("Nome do Produto");
-        campoNome = new JTextField(20);
-        painelConteudo.add(labelNome);
-        painelConteudo.add(campoNome);
-        painelConteudo.add(Box.createVerticalStrut(10));
+        labelPreco.setText("Preço");
 
-        JLabel labelPreco = new JLabel("Preço");
-        campoPreco = new JTextField(20);
-        painelConteudo.add(labelPreco);
-        painelConteudo.add(campoPreco);
-        painelConteudo.add(Box.createVerticalStrut(10));
+        labelQuantidade.setText("Quantidade");
 
-        JLabel labelQuantidade = new JLabel("Quantidade");
-        campoQuantidade = new JTextField(20);
-        painelConteudo.add(labelQuantidade);
-        painelConteudo.add(campoQuantidade);
-        painelConteudo.add(Box.createVerticalStrut(20));
+        btnAdicionar.setText("Adicionar");
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarActionPerformed(evt);
+            }
+        });
 
-        btnAdicionar = new JButton("Adicionar");
-        btnAdicionar.addActionListener(e -> adicionarProduto());
-        painelConteudo.add(btnAdicionar);
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
-        btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(e -> dispose());
-        painelConteudo.add(btnCancelar);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelNome)
+                    .addComponent(campoNome)
+                    .addComponent(labelPreco)
+                    .addComponent(campoPreco)
+                    .addComponent(labelQuantidade)
+                    .addComponent(campoQuantidade)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnAdicionar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCancelar)))
+                .addGap(30, 30, 30))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(labelTitulo)
+                .addGap(18, 18, 18)
+                .addComponent(labelNome)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(labelPreco)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(campoPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(labelQuantidade)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(campoQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdicionar)
+                    .addComponent(btnCancelar))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
 
-        setSize(400, 300);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
         setLocationRelativeTo(null);
-        add(painelConteudo);
+    }
+
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {
+        adicionarProduto();
+    }
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
     }
 
     private void adicionarProduto() {
@@ -75,38 +136,34 @@ public class TelaAdicionarProduto extends JFrame {
             return;
         }
 
-        // Gera o ID automaticamente
-        int id = gerarIdProduto();
+        Produto produto = new Produto(nome, preco, quantidade);
 
-        Produto produto = new Produto(id, nome, preco, quantidade);
+        boolean sucesso = produtoService.adicionarProduto(produto);
 
-        // Adiciona o produto ao arquivo produtos.txt
-        try (FileWriter writer = new FileWriter("src/main/resources/produtos.txt", true)) {
-            writer.write(produto.getId() + ";" + produto.getNome() + ";" + produto.getPreco() + ";" + produto.getQuantidade() + "\n");
+        if (sucesso) {
             JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Fecha a tela
-        } catch (IOException e) {
+            dispose();
+        } else {
             JOptionPane.showMessageDialog(this, "Erro ao adicionar produto.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private int gerarIdProduto() {
-        List<Integer> ids = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/produtos.txt"))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                String[] dadosProduto = linha.split(";");
-                ids.add(Integer.parseInt(dadosProduto[0]));
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new TelaAdicionarProduto().setVisible(true);
             }
-        } catch (IOException e) {
-            // Caso o arquivo não exista, a lista de IDs será vazia
-        }
-
-        // Retorna o próximo ID disponível
-        return ids.isEmpty() ? 1 : ids.stream().max(Integer::compareTo).get() + 1;
+        });
     }
 
-    public static void main(String[] args) {
-        new TelaAdicionarProduto().setVisible(true);
-    }
+    private javax.swing.JButton btnAdicionar;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JTextField campoNome;
+    private javax.swing.JTextField campoPreco;
+    private javax.swing.JTextField campoQuantidade;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel labelTitulo;
+    private javax.swing.JLabel labelNome;
+    private javax.swing.JLabel labelPreco;
+    private javax.swing.JLabel labelQuantidade;
 }

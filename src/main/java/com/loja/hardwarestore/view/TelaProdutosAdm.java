@@ -51,6 +51,8 @@ public class TelaProdutosAdm extends javax.swing.JFrame {
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaProdutos.getModel();
 
+        modelo.setRowCount(0);
+
         for (Produto produto : produtos) {
             Object[] linha = new Object[3];
             linha[0] = produto.getNome();

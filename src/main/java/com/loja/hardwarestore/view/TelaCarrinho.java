@@ -1,113 +1,162 @@
 package com.loja.hardwarestore.view;
 
+import com.loja.hardwarestore.dao.ProdutoDAO;
 import com.loja.hardwarestore.model.entidades.Produto;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.loja.hardwarestore.service.ProdutoService;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 
 public class TelaCarrinho extends JFrame {
 
-    private List<Produto> carrinho;
+    private JTable tabelaCarrinho;
+    private JScrollPane scrollPane;
 
-    // Construtor que recebe o carrinho de produtos
-    public TelaCarrinho(List<Produto> carrinho) {
-        this.carrinho = carrinho; // Atribui o carrinho passado ao campo
+    public TelaCarrinho() {
         initComponents();
+        configurarTabela();
+        carregarCarrinho();
     }
 
-    private void initComponents() {
-        JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setBackground(new Color(0xA5D6A7)); // Verde pastel para o fundo
-
-        // Título
-        JLabel lblTitulo = new JLabel("Carrinho de Compras");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        lblTitulo.setForeground(new Color(0x00796B)); // Cor similar ao título da tela de produtos
-        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        painelPrincipal.add(lblTitulo, BorderLayout.NORTH);
-
-        // Painel para itens do carrinho
-        JTextArea areaItens = new JTextArea();
-        areaItens.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        areaItens.setEditable(false);
-        areaItens.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0x0288D1), 2)); // Cor da borda semelhante
-
-        // Adiciona os produtos do carrinho na área de texto
-        if (carrinho.isEmpty()) {
-            areaItens.setText("Carrinho vazio");
-        } else {
-            StringBuilder itens = new StringBuilder("Itens no carrinho:\n");
-            for (Produto produto : carrinho) {
-                itens.append("- ").append(produto.getNome()).append(" - R$ ").append(String.format("%.2f", produto.getPreco())).append("\n");
-            }
-            areaItens.setText(itens.toString());
+    private void configurarTabela() {
+        if (tabelaCarrinho == null) {
+            tabelaCarrinho = new JTable();
         }
 
-        JScrollPane scrollPane = new JScrollPane(areaItens);
-        painelPrincipal.add(scrollPane, BorderLayout.CENTER);
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Nome");
+        modelo.addColumn("Preço");
+        tabelaCarrinho.setModel(modelo);
 
-        // Botões
-        JPanel painelBotoes = new JPanel();
-        painelBotoes.setBackground(new Color(0xE0F2F1)); // Cor de fundo dos botões mais suave
-        JButton btnComprar = new JButton("Comprar");
-        btnComprar.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnComprar.setBackground(new Color(0x4CAF50)); // Cor verde similar ao da tela de produtos
-        btnComprar.setForeground(Color.WHITE);
-        btnComprar.addActionListener(e -> comprarItens());
+        tabelaCarrinho.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tabelaCarrinho.setRowHeight(40);
+        tabelaCarrinho.setSelectionBackground(new Color(0x4CAF50));
+        tabelaCarrinho.setSelectionForeground(Color.WHITE);
 
-        JButton btnLimpar = new JButton("Limpar Carrinho");
-        btnLimpar.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnLimpar.setBackground(new Color(0xF44336)); // Cor vermelha similar ao da tela de produtos
-        btnLimpar.setForeground(Color.WHITE);
-        btnLimpar.addActionListener(e -> limparCarrinho(areaItens));
+        if (scrollPane == null) {
+            scrollPane = new JScrollPane(tabelaCarrinho);
+        }
 
-        painelBotoes.add(btnComprar);
-        painelBotoes.add(btnLimpar);
-
-        painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
-
-        // Configurações da janela
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Carrinho de Compras");
-        getContentPane().add(painelPrincipal);
-        setSize(400, 600);
-        setLocationRelativeTo(null);
+        scrollPane.setPreferredSize(new Dimension(800, 400));
     }
 
-    private void comprarItens() {
-        JOptionPane.showMessageDialog(this, "Compra realizada com sucesso!", "Confirmação", JOptionPane.INFORMATION_MESSAGE);
+    private void carregarCarrinho() {
+        ProdutoDAO produtoDAO = new ProdutoDAO();
+        ProdutoService produtoService = new ProdutoService(produtoDAO);
+
+        List<Produto> produtos = produtoService.obterProdutosDoCarrinho();
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaCarrinho.getModel();
+
+        for (Produto produto : produtos) {
+            Object[] linha = new Object[2];
+            linha[0] = produto.getNome();
+            linha[1] = "R$ " + String.format("%.2f", produto.getPreco());
+            modelo.addRow(linha);
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    private void removerItemDoCarrinho() {
+        int selectedRow = tabelaCarrinho.getSelectedRow();
+
+        if (selectedRow != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) tabelaCarrinho.getModel();
+            String nomeProduto = (String) modelo.getValueAt(selectedRow, 0);
+
+            ProdutoService produtoService = new ProdutoService(new ProdutoDAO());
+
+            boolean sucesso = produtoService.removerProdutoDoCarrinho(nomeProduto);
+
+            if (sucesso) {
+                modelo.removeRow(selectedRow);
+                JOptionPane.showMessageDialog(this, "Produto removido do carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao remover produto do carrinho.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um item para remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void voltar() {
+        TelaProdutos telaProdutos = new TelaProdutos();
+        telaProdutos.setVisible(true);
         this.dispose();
     }
 
-    private void limparCarrinho(JTextArea areaItens) {
-        carrinho.clear();
-        areaItens.setText("Carrinho vazio");
-        // Limpa o arquivo carrinho.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/carrinho.txt"))) {
-            writer.write(""); // Limpa o conteúdo do arquivo
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao limpar o carrinho!", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-        JOptionPane.showMessageDialog(this, "Carrinho limpo com sucesso!", "Confirmação", JOptionPane.INFORMATION_MESSAGE);
+    private void initComponents() {
+        getContentPane().setLayout(new BorderLayout());
+
+        JLabel jLabel1 = new JLabel("Hardware Store");
+        JLabel jLabel2 = new JLabel("Carrinho:");
+        JButton btnVoltar = new JButton("Voltar");
+        JButton btnRemover = new JButton("Remover Item");
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Carrinho de Compras");
+
+        jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        jLabel1.setForeground(new Color(0x00796B));
+
+        jLabel2.setFont(new Font("Segoe UI", Font.BOLD, 18)); 
+        jLabel2.setForeground(Color.WHITE);
+        JPanel painelTopo = new JPanel();
+        painelTopo.setBackground(new Color(0x004D40));
+        painelTopo.setLayout(new BoxLayout(painelTopo, BoxLayout.Y_AXIS));
+        painelTopo.add(jLabel1);
+        painelTopo.add(Box.createVerticalStrut(10));
+        painelTopo.add(jLabel2);
+
+        btnVoltar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnVoltar.setBackground(Color.WHITE);
+        btnVoltar.setForeground(new Color(0x004D40));
+        btnVoltar.setBorderPainted(false);
+        btnVoltar.setFocusPainted(false);
+        btnVoltar.addActionListener(e -> voltar());
+
+        btnRemover.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnRemover.setBackground(Color.WHITE);
+        btnRemover.setForeground(new Color(0x004D40));
+        btnRemover.setBorderPainted(false);
+        btnRemover.setFocusPainted(false);
+        btnRemover.addActionListener(e -> removerItemDoCarrinho());
+
+        JButton btnFormasPagamento = new JButton("Formas de Pagamento");
+        btnFormasPagamento.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnFormasPagamento.setBackground(Color.WHITE);
+        btnFormasPagamento.setForeground(new Color(0x004D40));
+        btnFormasPagamento.setBorderPainted(false);
+        btnFormasPagamento.setFocusPainted(false);
+        btnFormasPagamento.addActionListener(e -> abrirTelaFormasPagamento());
+
+        JPanel painelBotoes = new JPanel();
+        painelBotoes.add(btnFormasPagamento);
+
+        painelBotoes.setBackground(new Color(0xE0F2F1));
+        painelBotoes.add(btnVoltar);
+        painelBotoes.add(btnRemover);
+
+        configurarTabela();
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
+        getContentPane().add(painelTopo, BorderLayout.NORTH);
+        getContentPane().add(painelBotoes, BorderLayout.SOUTH);
+
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    private void abrirTelaFormasPagamento() {
+        TelaFormasPagamento telaFormasPagamento = new TelaFormasPagamento();
+        telaFormasPagamento.setVisible(true);
+        this.dispose();
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new TelaCarrinho(List.of()).setVisible(true)); // Exemplo sem produtos
+        SwingUtilities.invokeLater(() -> new TelaCarrinho().setVisible(true));
     }
 }

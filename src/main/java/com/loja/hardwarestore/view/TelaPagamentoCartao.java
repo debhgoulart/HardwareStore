@@ -1,5 +1,7 @@
 package com.loja.hardwarestore.view;
 
+import com.loja.hardwarestore.dao.ProdutoDAO;
+import com.loja.hardwarestore.service.ProdutoService;
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,25 +12,21 @@ public class TelaPagamentoCartao extends javax.swing.JFrame {
     }
 
     private void initComponents() {
-        // Painel principal
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setBackground(new Color(0xE0F2F1));
+        painelPrincipal.setBackground(new Color(0x004D40));
 
-        // Título
         JLabel lblTitulo = new JLabel("Pagamento com Cartão");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        lblTitulo.setForeground(new Color(0x004D40));
+        lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         painelPrincipal.add(lblTitulo, BorderLayout.NORTH);
 
-        // Painel do formulário
         JPanel painelFormulario = new JPanel();
-        painelFormulario.setLayout(new GridLayout(5, 2, 10, 10)); // 5 linhas, 2 colunas, espaçamento
-        painelFormulario.setBackground(new Color(0xB2DFDB));
-        painelFormulario.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Margens internas
+        painelFormulario.setLayout(new GridLayout(5, 2, 10, 10));
+        painelFormulario.setBackground(new Color(0xA8D7B7));
+        painelFormulario.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Campos do formulário
         JLabel lblNumeroCartao = new JLabel("Número do Cartão:");
         lblNumeroCartao.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         lblNumeroCartao.setForeground(new Color(0x004D40));
@@ -53,12 +51,11 @@ public class TelaPagamentoCartao extends javax.swing.JFrame {
         JTextField txtNomeTitular = new JTextField();
         txtNomeTitular.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
-        JLabel lblTotal = new JLabel("Total a Pagar: R$ 150,00");
+        JLabel lblTotal = new JLabel("Total a Pagar: R$ " + calcularTotalCarrinho());
         lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTotal.setForeground(new Color(0x004D40));
         lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // Adicionando componentes ao formulário
         painelFormulario.add(lblNumeroCartao);
         painelFormulario.add(txtNumeroCartao);
         painelFormulario.add(lblValidade);
@@ -71,10 +68,9 @@ public class TelaPagamentoCartao extends javax.swing.JFrame {
 
         painelPrincipal.add(painelFormulario, BorderLayout.CENTER);
 
-        // Botão Confirmar Pagamento
         JButton btnConfirmarPagamento = new JButton("Confirmar Pagamento");
         btnConfirmarPagamento.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnConfirmarPagamento.setBackground(new Color(0x4CAF50));
+        btnConfirmarPagamento.setBackground(new Color(0x004D40));
         btnConfirmarPagamento.setForeground(Color.WHITE);
         btnConfirmarPagamento.setFocusPainted(false);
         btnConfirmarPagamento.setBorderPainted(false);
@@ -83,7 +79,6 @@ public class TelaPagamentoCartao extends javax.swing.JFrame {
 
         painelPrincipal.add(btnConfirmarPagamento, BorderLayout.SOUTH);
 
-        // Configuração do JFrame
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Pagamento - Cartão de Crédito/Débito");
         getContentPane().add(painelPrincipal);
@@ -91,8 +86,15 @@ public class TelaPagamentoCartao extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
+    private double calcularTotalCarrinho() {
+        ProdutoService produtoService = new ProdutoService(new ProdutoDAO());
+        return produtoService.calcularTotalCarrinho();
+    }
+
     private void confirmarPagamento() {
-        JOptionPane.showMessageDialog(this, "Pagamento realizado com sucesso!", "Confirmação", JOptionPane.INFORMATION_MESSAGE);
+        TelaCompraRealizada telaCompraRealizada = new TelaCompraRealizada();
+        telaCompraRealizada.setVisible(true);
+
         this.dispose();
     }
 

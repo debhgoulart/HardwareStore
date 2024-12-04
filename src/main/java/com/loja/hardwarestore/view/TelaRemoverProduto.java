@@ -3,6 +3,7 @@ package com.loja.hardwarestore.view;
 import com.loja.hardwarestore.dao.ProdutoDAO;
 import com.loja.hardwarestore.model.entidades.Produto;
 import com.loja.hardwarestore.service.ProdutoService;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -25,7 +26,6 @@ public class TelaRemoverProduto extends javax.swing.JFrame {
         }
 
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("ID");
         modelo.addColumn("Nome");
         modelo.addColumn("Preço");
         modelo.addColumn("Quantidade");
@@ -53,11 +53,10 @@ public class TelaRemoverProduto extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaProdutos.getModel();
 
         for (Produto produto : produtos) {
-            Object[] linha = new Object[4];
-            linha[0] = produto.getId();
-            linha[1] = produto.getNome();
-            linha[2] = "R$ " + String.format("%.2f", produto.getPreco());
-            linha[3] = produto.getQuantidade();
+            Object[] linha = new Object[3];
+            linha[0] = produto.getNome();
+            linha[1] = "R$ " + String.format("%.2f", produto.getPreco());
+            linha[2] = produto.getQuantidade();
             modelo.addRow(linha);
         }
 
@@ -68,11 +67,11 @@ public class TelaRemoverProduto extends javax.swing.JFrame {
     private void removerProduto() {
         int selectedRow = tabelaProdutos.getSelectedRow();
         if (selectedRow != -1) {
-            int idProduto = (int) tabelaProdutos.getValueAt(selectedRow, 0);
+            String nomeProduto = (String) tabelaProdutos.getValueAt(selectedRow, 0);
             ProdutoDAO produtoDAO = new ProdutoDAO();
             ProdutoService produtoService = new ProdutoService(produtoDAO);
 
-            boolean sucesso = produtoService.removerProduto(idProduto);
+            boolean sucesso = produtoService.removerProduto(nomeProduto);
             if (sucesso) {
                 JOptionPane.showMessageDialog(this, "Produto removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 DefaultTableModel modelo = (DefaultTableModel) tabelaProdutos.getModel();
