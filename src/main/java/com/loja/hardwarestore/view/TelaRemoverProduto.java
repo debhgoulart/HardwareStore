@@ -51,6 +51,7 @@ public class TelaRemoverProduto extends javax.swing.JFrame {
         List<Produto> produtos = produtoService.obterTodosProdutos();
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaProdutos.getModel();
+        modelo.setRowCount(0); // Limpar a tabela antes de repopular
 
         for (Produto produto : produtos) {
             Object[] linha = new Object[3];
@@ -75,7 +76,7 @@ public class TelaRemoverProduto extends javax.swing.JFrame {
             if (sucesso) {
                 JOptionPane.showMessageDialog(this, "Produto removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 DefaultTableModel modelo = (DefaultTableModel) tabelaProdutos.getModel();
-                modelo.removeRow(selectedRow);
+                modelo.removeRow(selectedRow);  // Remove a linha da tabela
             } else {
                 JOptionPane.showMessageDialog(this, "Erro ao remover produto.", "Erro", JOptionPane.ERROR_MESSAGE);
             }

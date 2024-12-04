@@ -20,5 +20,4 @@ Placa de Som Creative Sound Blaster AE-7 PCIe;229.99;8
 Unidade Óptica LG WH16NS40 Blu-Ray/DVD/CD Internal;89.99;15
 Placa de Captura HDMI Elgato HD60 S+ 1080p USB 3.0;179.99;10
 Estação de ancoragem Anker PowerExpand Elite 13-in-1 Thunderbolt;249.99;12
-SSD Externo SanDisk Extreme Portable SSD 2TB USB-C;249.99;18
-Cabos AmazonBasics HDMI Cable 6ft 4K;9.99;100
+adm;12.0;12

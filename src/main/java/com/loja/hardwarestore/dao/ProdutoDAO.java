@@ -69,7 +69,7 @@ public class ProdutoDAO {
 
     public double calcularTotalCarrinho() {
         double total = 0;
-        List<Produto> produtosCarrinho = carregarProdutosCarrinho(); 
+        List<Produto> produtosCarrinho = carregarProdutosCarrinho();
 
         for (Produto produto : produtosCarrinho) {
             total += produto.getPreco();
@@ -97,33 +97,6 @@ public class ProdutoDAO {
         return produtos;
     }
 
-    public boolean removerProduto(String nomeProduto) {
-        List<Produto> produtos = obterTodosProdutos();
-        boolean produtoRemovido = false;
-
-        for (Produto produto : produtos) {
-            if (produto.getNome().equals(nomeProduto)) {
-                produtos.remove(produto);
-                produtoRemovido = true;
-                break;
-            }
-        }
-
-        if (produtoRemovido) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
-                for (Produto produto : produtos) {
-                    writer.write(formatarProduto(produto));
-                    writer.newLine();
-                }
-                return true;
-            } catch (IOException e) {
-                System.err.println("Erro ao gravar o arquivo: " + e.getMessage());
-            }
-        }
-
-        return false;
-    }
-
     public List<Produto> carregarProdutosDoArquivo() {
         List<Produto> produtos = new ArrayList<>();
         String caminhoArquivo = "src/main/resources/produtos.txt";
@@ -146,8 +119,37 @@ public class ProdutoDAO {
         return produtos;
     }
 
+    public boolean removerProduto(String nomeProduto) {
+        List<Produto> produtos = obterTodosProdutos();
+        boolean produtoRemovido = false;
+
+        // Remover o produto correspondente
+        for (Produto produto : produtos) {
+            if (produto.getNome().equals(nomeProduto)) {
+                produtos.remove(produto);
+                produtoRemovido = true;
+                break;
+            }
+        }
+
+        // Se o produto foi removido, reescrever o arquivo sem ele
+        if (produtoRemovido) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
+                for (Produto produto : produtos) {
+                    writer.write(formatarProduto(produto));
+                    writer.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                System.err.println("Erro ao gravar o arquivo: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
     private String formatarProduto(Produto produto) {
-        return produto.getNome() + ";" + produto.getNome() + ";" + produto.getPreco() + ";" + produto.getQuantidade();
+        // Corrigir formatação do produto
+        return produto.getNome() + ";" + produto.getPreco() + ";" + produto.getQuantidade();
     }
 
     public Produto processarLinha(String linha) {
